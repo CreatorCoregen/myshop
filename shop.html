@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Exchange Shop Syria</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Cairo',sans-serif;background:#f5f5f5;color:#333;}
+:root{--green:#1f7a1f;--gold:#d4af37;--light-bg:#fff;}
+header{display:flex;justify-content:space-between;align-items:center;padding:1rem 2rem;background:var(--green);color:var(--gold);position:relative;}
+.logo{font-size:1.8rem;font-weight:bold;}
+.lang-switcher button{background:var(--gold);border:none;padding:0.4rem 0.8rem;margin-left:0.5rem;cursor:pointer;border-radius:5px;font-weight:bold;transition:0.3s;}
+.lang-switcher button:hover{opacity:0.8;}
+#adminIcon{position:absolute;top:10px;left:10px;background:var(--gold);color:var(--green);border-radius:50%;width:40px;height:40px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-weight:bold;transition:0.3s;}
+#adminIcon:hover{opacity:0.8;}
+.hero{text-align:center;padding:2rem;background:linear-gradient(to bottom right,var(--green),var(--gold));color:white;}
+.hero h1{font-size:2rem;margin-bottom:1rem;}
+.hero p{font-size:1rem;max-width:700px;margin:0 auto;line-height:1.6;}
+input,textarea,select,button{font-family:'Cairo',sans-serif;}
+input,textarea,select{width:90%;padding:0.6rem;margin:0.5rem 0;border-radius:5px;border:1px solid #ccc;}
+button{padding:0.6rem 1.2rem;border:none;border-radius:5px;cursor:pointer;font-weight:bold;transition:0.3s;}
+button:hover{opacity:0.8;}
+.modal{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.6);align-items:center;justify-content:center;z-index:1000;}
+.modal-content{background:var(--light-bg);padding:2rem;border-radius:10px;max-width:400px;width:90%;text-align:center;box-shadow:0 4px 12px rgba(0,0,0,0.2);}
+.admin-dashboard{padding:2rem;max-width:1000px;margin:2rem auto;background:var(--light-bg);border-radius:10px;box-shadow:0 2px 12px rgba(0,0,0,0.1);display:none;}
+.admin-dashboard table{width:100%;border-collapse:collapse;margin-top:1rem;}
+.admin-dashboard th,.admin-dashboard td{border:1px solid #ccc;padding:0.8rem;text-align:center;}
+.admin-dashboard th{background:var(--green);color:var(--gold);}
+.owner-btn,.owner-action-btn{background:var(--gold);color:var(--green);border:none;padding:0.5rem 1rem;border-radius:5px;cursor:pointer;margin-top:1rem;font-weight:bold;display:block;width:100%;max-width:200px;margin-bottom:0.5rem;transition:0.3s;}
+.owner-btn:hover,.owner-action-btn:hover{opacity:0.8;}
+#ownerPanel{display:none;margin-top:2rem;}
+footer{text-align:center;padding:2rem;background:var(--green);color:var(--gold);}
+@media(max-width:600px){.hero h1{font-size:1.5rem;}.hero p{font-size:0.9rem;} header{flex-direction:column;align-items:flex-start;} .lang-switcher{margin-top:0.5rem;} .admin-dashboard table,.admin-dashboard th,.admin-dashboard td{font-size:0.9rem;} .owner-btn,.owner-action-btn{max-width:100%;}}
+</style>
+</head>
+<body>
+
+<header>
+  <div id="adminIcon">A</div>
+  <div class="logo" data-lang-ar="مكتب صرافة" data-lang-en="Exchange Shop">مكتب صرافة</div>
+  <div class="lang-switcher">
+    <button id="arBtn">AR</button>
+    <button id="enBtn">EN</button>
+  </div>
+</header>
+
+<section class="hero">
+  <h1 data-lang-ar="مرحباً بكم في مكتب صرافة سوريا" data-lang-en="Welcome to Syria Exchange Shop">مرحباً بكم في مكتب صرافة سوريا</h1>
+  <p data-lang-ar="نحن نقدم خدمات صرافة سريعة وآمنة في سوريا. نلتزم بالشفافية في الأسعار ونحترم سرية معلومات عملائنا. ثِقْ بنا لإجراء عملياتك المالية بأمان واحترافية."
+     data-lang-en="We provide fast and secure exchange services in Syria. We ensure price transparency and respect client confidentiality. Trust us for secure financial transactions.">
+    نحن نقدم خدمات صرافة سريعة وآمنة في سوريا. نلتزم بالشفافية في الأسعار ونحترم سرية معلومات عملائنا. ثِقْ بنا لإجراء عملياتك المالية بأمان واحترافية.
+  </p>
+
+  <h2 data-lang-ar="اتصل بنا" data-lang-en="Contact Us">اتصل بنا</h2>
+  <input type="text" id="contactName" placeholder="الاسم" data-lang-ar-placeholder="الاسم" data-lang-en-placeholder="Name">
+  <input type="text" id="contactPhone" placeholder="رقم الهاتف" data-lang-ar-placeholder="رقم الهاتف" data-lang-en-placeholder="Phone">
+  <textarea id="contactMessage" placeholder="اكتب رسالتك هنا" data-lang-ar-placeholder="اكتب رسالتك هنا" data-lang-en-placeholder="Write your message here"></textarea>
+  <button id="sendContactBtn" data-lang-ar="إرسال" data-lang-en="Send">إرسال</button>
+</section>
+
+<!-- Admin Modal -->
+<div id="adminModal" class="modal">
+  <div class="modal-content">
+    <h2 data-lang-ar="تسجيل الدخول كمسؤول" data-lang-en="Admin Login">تسجيل الدخول كمسؤول</h2>
+    <input type="text" id="adminName" placeholder="اسم المستخدم" data-lang-ar-placeholder="اسم المستخدم" data-lang-en-placeholder="Username">
+    <input type="password" id="adminPass" placeholder="كلمة المرور" data-lang-ar-placeholder="كلمة المرور" data-lang-en-placeholder="Password">
+    <button id="adminLoginBtn" data-lang-ar="تسجيل الدخول" data-lang-en="Login">تسجيل الدخول</button>
+  </div>
+</div>
+
+<!-- Owner Modal -->
+<div id="ownerModal" class="modal">
+  <div class="modal-content">
+    <h2 data-lang-ar="تسجيل الدخول للمالك" data-lang-en="Owner Login">تسجيل الدخول للمالك</h2>
+    <input type="text" id="ownerName" placeholder="اسم المالك" data-lang-ar-placeholder="اسم المالك" data-lang-en-placeholder="Owner Name">
+    <input type="password" id="ownerPass" placeholder="كلمة المرور" data-lang-ar-placeholder="كلمة المرور" data-lang-en-placeholder="Owner Password">
+    <button id="ownerLoginBtn" data-lang-ar="تسجيل الدخول" data-lang-en="Login">تسجيل الدخول</button>
+  </div>
+</div>
+
+<!-- Admin Dashboard -->
+<section class="admin-dashboard" id="adminDashboard">
+  <h2 data-lang-ar="لوحة المسؤول" data-lang-en="Admin Dashboard">لوحة المسؤول</h2>
+  <div class="online-status" id="siteStatusDisplay" data-lang-ar="حالة الموقع: " data-lang-en="Site Status: ">حالة الموقع: <span id="siteStatusText">Online</span></div>
+
+  <h3 data-lang-ar="إضافة معاملة" data-lang-en="Add Transaction">إضافة معاملة</h3>
+  <input type="text" id="transName" placeholder="الاسم" data-lang-ar-placeholder="الاسم" data-lang-en-placeholder="Name">
+  <input type="number" id="transAmount" placeholder="المبلغ" data-lang-ar-placeholder="المبلغ" data-lang-en-placeholder="Amount">
+  <select id="transCurrency">
+    <option value="USD" data-lang-ar="دولار" data-lang-en="USD">دولار</option>
+    <option value="EUR" data-lang-ar="يورو" data-lang-en="EUR">يورو</option>
+    <option value="SYP" data-lang-ar="ليرة سورية" data-lang-en="SYP">ليرة سورية</option>
+    <option value="SAR" data-lang-ar="ريال سعودي" data-lang-en="SAR">ريال سعودي</option>
+    <option value="JOD" data-lang-ar="دينار أردني" data-lang-en="JOD">دينار أردني</option>
+  </select>
+  <input type="text" id="transLocation" placeholder="المكان" data-lang-ar-placeholder="المكان" data-lang-en-placeholder="Location">
+  <input type="text" id="transNote" placeholder="ملاحظة" data-lang-ar-placeholder="ملاحظة" data-lang-en-placeholder="Note">
+  <button id="addTransactionBtn" class="owner-action-btn" data-lang-ar="إضافة" data-lang-en="Add Transaction">إضافة</button>
+
+  <h3 data-lang-ar="المعاملات" data-lang-en="Transactions">المعاملات</h3>
+  <input type="text" id="searchInput" placeholder="بحث بالاسم..." data-lang-ar-placeholder="بحث بالاسم..." data-lang-en-placeholder="Search by Name...">
+  <table id="transactionTable">
+    <thead>
+      <tr>
+        <th data-lang-ar="الاسم" data-lang-en="Name">الاسم</th>
+        <th data-lang-ar="المبلغ" data-lang-en="Amount">المبلغ</th>
+        <th data-lang-ar="العملة" data-lang-en="Currency">العملة</th>
+        <th data-lang-ar="التاريخ" data-lang-en="Date">التاريخ</th>
+        <th data-lang-ar="المكان" data-lang-en="Location">المكان</th>
+        <th data-lang-ar="ملاحظة" data-lang-en="Note">ملاحظة</th>
+        <th data-lang-ar="أضيف بواسطة" data-lang-en="Added By">أضيف بواسطة</th>
+        <th data-lang-ar="حذف" data-lang-en="Delete">حذف</th>
+      </tr>
+    </thead>
+    <tbody id="tableBody"></tbody>
+  </table>
+
+  <button id="showOwnerPanelBtn" class="owner-btn" data-lang-ar="للمالك فقط" data-lang-en="Owner Only">للمالك فقط</button>
+  <div id="ownerPanel"></div>
+</section>
+
+<footer data-lang-ar="حقوق النشر 2025 مكتب صرافة سوريا | موثوق وآمن" data-lang-en="© 2025 Exchange Shop Syria | Trustworthy & Secure">حقوق النشر 2025 مكتب صرافة سوريا | موثوق وآمن</footer>
+
+<script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
+<script>
+const firebaseConfig={apiKey:"AIzaSyB-HqipTJ0S0SJX91Z1Efkpg9YL99dUUyA",authDomain:"syria-da866.firebaseapp.com",projectId:"syria-da866",storageBucket:"syria-da866.firebasestorage.app",messagingSenderId:"381553872979",appId:"1:381553872979:web:2431a039daed607e7536a6",measurementId:"G-J3CYD2MD4P"};
+firebase.initializeApp(firebaseConfig);
+const db=firebase.firestore();
+
+document.getElementById("arBtn").addEventListener("click",()=>switchLanguage("ar"));
+document.getElementById("enBtn").addEventListener("click",()=>switchLanguage("en"));
+
+function switchLanguage(lang){
+  document.querySelectorAll("[data-lang-ar]").forEach(el=>el.textContent=(lang==="ar")?el.dataset.langAr:el.dataset.langEn);
+  document.querySelectorAll("input[data-lang-ar-placeholder]").forEach(el=>el.placeholder=(lang==="ar")?el.dataset.langArPlaceholder:el.dataset.langEnPlaceholder);
+  document.querySelectorAll("textarea[data-lang-ar-placeholder]").forEach(el=>el.placeholder=(lang==="ar")?el.dataset.langArPlaceholder:el.dataset.langEnPlaceholder);
+  document.querySelectorAll("button[data-lang-ar]").forEach(el=>el.textContent=(lang==="ar")?el.dataset.langAr:el.dataset.langEn);
+  document.querySelectorAll("select option[data-lang-ar]").forEach(el=>el.textContent=(lang==="ar")?el.dataset.langAr:el.dataset.langEn);
+}
+
+// Admin/Owner Modals
+const adminModal=document.getElementById("adminModal");
+const ownerModal=document.getElementById("ownerModal");
+const adminDashboard=document.getElementById("adminDashboard");
+const ownerPanel=document.getElementById("ownerPanel");
+const tableBody=document.getElementById("tableBody");
+document.getElementById("adminIcon").addEventListener("click",()=>{adminModal.style.display="flex";});
+window.addEventListener("click",e=>{if(e.target==adminModal) adminModal.style.display="none";if(e.target==ownerModal) ownerModal.style.display="none";});
+
+// Admin Login
+document.getElementById("adminLoginBtn").addEventListener("click",()=>{
+  const name=document.getElementById("adminName").value.trim();
+  const pass=document.getElementById("adminPass").value.trim();
+  if(name==="admin" && pass==="1234"){adminModal.style.display="none";adminDashboard.style.display="block";}else{alert("Invalid admin credentials");}
+});
+
+// Owner Login
+document.getElementById("ownerLoginBtn").addEventListener("click",()=>{
+  const name=document.getElementById("ownerName").value.trim();
+  const pass=document.getElementById("ownerPass").value.trim();
+  if(name==="reslan" && pass==="6516511"){ownerModal.style.display="none";showOwnerPanel();}else{alert("Invalid owner credentials");}
+});
+
+// Add Transaction
+document.getElementById("addTransactionBtn").addEventListener("click",()=>{
+  const name=document.getElementById("transName").value.trim();
+  const amount=document.getElementById("transAmount").value.trim();
+  const currency=document.getElementById("transCurrency").value;
+  const location=document.getElementById("transLocation").value.trim();
+  const note=document.getElementById("transNote").value.trim();
+  if(!name||!amount){alert("Please fill name and amount");return;}
+  const date=new Date();
+  db.collection("transactions").add({name,amount:Number(amount),currency,location,note,date,addedBy:"Admin"})
+  .then(docRef=>{renderTransaction(docRef.id,{name,amount,currency,location,note,date,addedBy:"Admin"});document.getElementById("transName").value="";document.getElementById("transAmount").value="";document.getElementById("transLocation").value="";document.getElementById("transNote").value="";})
+  .catch(err=>console.error(err));
+});
+
+function renderTransaction(id,data){
+  const tr=document.createElement("tr");
+  tr.dataset.id=id;
+  tr.innerHTML=`<td>${data.name}</td><td>${data.amount}</td><td>${data.currency}</td><td>${new Date(data.date.seconds*1000||data.date).toLocaleString()}</td><td>${data.location}</td><td>${data.note||""}</td><td>${data.addedBy}</td><td><button class="deleteBtn">❌</button></td>`;
+  tableBody.appendChild(tr);
+  tr.querySelector(".deleteBtn").addEventListener("click",()=>{db.collection("transactions").doc(id).delete().then(()=>{tr.remove();});});
+}
+
+// Contact Us
+document.getElementById("sendContactBtn").addEventListener("click",()=>{
+  const name=document.getElementById("contactName").value.trim();
+  const phone=document.getElementById("contactPhone").value.trim();
+  const msg=document.getElementById("contactMessage").value.trim();
+  if(!name||!phone||!msg){alert("Please fill all fields");return;}
+  db.collection("contactMessages").add({name,phone,msg,date:new Date()})
+  .then(()=>{alert("Message sent");document.getElementById("contactName").value="";document.getElementById("contactPhone").value="";document.getElementById("contactMessage").value="";})
+  .catch(err=>console.error(err));
+});
+
+// Owner Panel
+document.getElementById("showOwnerPanelBtn").addEventListener("click",showOwnerPanel);
+
+function showOwnerPanel(){
+  ownerPanel.style.display="block";
+  ownerPanel.innerHTML=`
+    <h3 data-lang-ar="تحكم المالك" data-lang-en="Owner Controls">تحكم المالك</h3>
+    <button id="toggleSiteBtn" class="owner-action-btn" data-lang-ar="تبديل الموقع" data-lang-en="Toggle Site Online/Offline">تبديل الموقع</button>
+    <h4 data-lang-ar="إضافة مسؤول" data-lang-en="Add Admin">إضافة مسؤول</h4>
+    <input type="text" id="newAdminName" placeholder="Admin Name">
+    <button id="addAdminBtn" class="owner-action-btn" data-lang-ar="إضافة مسؤول" data-lang-en="Add Admin">إضافة مسؤول</button>
+    <h4 data-lang-ar="إزالة مسؤول" data-lang-en="Remove Admin">إزالة مسؤول</h4>
+    <input type="text" id="removeAdminName" placeholder="Admin Name">
+    <button id="removeAdminBtn" class="owner-action-btn" data-lang-ar="إزالة مسؤول" data-lang-en="Remove Admin">إزالة مسؤول</button>
+    <h4 data-lang-ar="سجلات المعاملات" data-lang-en="Transaction Logs">سجلات المعاملات</h4>
+    <table id="ownerTransactionTable"><thead><tr><th>Name</th><th>Amount</th><th>Currency</th><th>Date</th><th>Location</th><th>Note</th><th>Added By</th><th>Delete</th></tr></thead><tbody id="ownerTableBody"></tbody></table>
+    <h4 data-lang-ar="رسائل العملاء" data-lang-en="Customer Messages">رسائل العملاء</h4>
+    <table id="ownerMessagesTable"><thead><tr><th>Name</th><th>Phone</th><th>Message</th><th>Date</th><th>Delete</th></tr></thead><tbody id="ownerMessagesBody"></tbody></table>
+  `;
+
+  const toggleBtn=document.getElementById("toggleSiteBtn");
+  const addAdminBtn=document.getElementById("addAdminBtn");
+  const removeAdminBtn=document.getElementById("removeAdminBtn");
+  const ownerTableBody=document.getElementById("ownerTableBody");
+  const ownerMessagesBody=document.getElementById("ownerMessagesBody");
+
+  // Site toggle
+  let siteOnline=true;
+  toggleBtn.addEventListener("click",()=>{siteOnline=!siteOnline;document.getElementById("siteStatusText").textContent=siteOnline?"Online":"Offline";alert(siteOnline?"Site is now Online":"Site is now Offline");});
+
+  // Admin add/remove
+  addAdminBtn.addEventListener("click",()=>{
+    const name=document.getElementById("newAdminName").value.trim(); if(!name)return alert("Enter admin name");
+    db.collection("admins").doc(name).set({addedBy:"Owner",date:new Date()}).then(()=>{alert("Admin added: "+name);document.getElementById("newAdminName").value="";});
+  });
+  removeAdminBtn.addEventListener("click",()=>{
+    const name=document.getElementById("removeAdminName").value.trim(); if(!name)return alert("Enter admin name");
+    db.collection("admins").doc(name).delete().then(()=>{alert("Admin removed: "+name);document.getElementById("removeAdminName").value="";});
+  });
+
+  // Load transactions
+  db.collection("transactions").orderBy("date","desc").get().then(snapshot=>{
+    ownerTableBody.innerHTML="";
+    snapshot.forEach(doc=>{
+      const data=doc.data();
+      const tr=document.createElement("tr");
+      tr.innerHTML=`<td>${data.name}</td><td>${data.amount}</td><td>${data.currency}</td><td>${new Date(data.date.seconds*1000||data.date).toLocaleString()}</td><td>${data.location}</td><td>${data.note||""}</td><td>${data.addedBy}</td><td><button class="deleteBtn">❌</button></td>`;
+      ownerTableBody.appendChild(tr);
+      tr.querySelector(".deleteBtn").addEventListener("click",()=>{db.collection("transactions").doc(doc.id).delete().then(()=>{tr.remove();});});
+    });
+  });
+
+  // Load customer messages
+  db.collection("contactMessages").orderBy("date","desc").get().then(snapshot=>{
+    ownerMessagesBody.innerHTML="";
+    snapshot.forEach(doc=>{
+      const data=doc.data();
+      const tr=document.createElement("tr");
+      tr.innerHTML=`<td>${data.name}</td><td>${data.phone}</td><td>${data.msg}</td><td>${new Date(data.date.seconds*1000||data.date).toLocaleString()}</td><td><button class="deleteMsgBtn">❌</button></td>`;
+      ownerMessagesBody.appendChild(tr);
+      tr.querySelector(".deleteMsgBtn").addEventListener("click",()=>{db.collection("contactMessages").doc(doc.id).delete().then(()=>{tr.remove();});});
+    });
+  });
+}
+</script>
+</body>
+</html>
